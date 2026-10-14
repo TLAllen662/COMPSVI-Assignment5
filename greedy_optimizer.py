@@ -75,11 +75,35 @@ def optimize_truck_load(packages, weight_limit):
         weight_limit = 50
         optimize_truck_load(packages, 50) returns packages A (full), B (full), C (partial)
     """
-    # TODO: Implement greedy algorithm for fractional knapsack
-    # Hint: What ratio determines which packages are most valuable per pound?
-    # Hint: You can take fractions - if you have 5 lbs capacity left and a 10 lb package, take 0.5 of it
-    
-    pass  # Delete this and write your code
+    # Greedy: take packages in order of highest priority per unit weight
+    remaining = weight_limit
+    total_priority = 0.0
+    total_weight = 0.0
+    loaded = []
+    ranked = sorted(
+        packages,
+        key=lambda p: p['priority'] / p['weight'] if p['weight'] > 0 else float('inf'),
+        reverse=True,
+    )
+    for p in ranked:
+        if remaining <= 0:
+            break
+        if p['weight'] <= 0:
+            fraction = 1.0
+        else:
+            fraction = min(1.0, remaining / p['weight'])
+        if fraction <= 0:
+            continue
+        taken = p['weight'] * fraction
+        remaining -= taken
+        total_weight += taken
+        total_priority += p['priority'] * fraction
+        loaded.append({'package_id': p['package_id'], 'fraction': fraction})
+    return {
+        'total_priority': total_priority,
+        'total_weight': total_weight,
+        'packages': loaded,
+    }
 
 
 # ============================================================================
@@ -301,7 +325,7 @@ if __name__ == "__main__":
     # Uncomment these as you complete each part:
     
     test_package_prioritization()
-    # test_truck_loading()
+    test_truck_loading()
     # test_driver_assignment()
     # benchmark_scenarios()
     
