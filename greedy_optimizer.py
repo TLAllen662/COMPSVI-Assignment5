@@ -135,11 +135,20 @@ def minimize_drivers(deliveries):
         ]
         minimize_drivers(deliveries) returns 2 drivers: [[A, C], [B]]
     """
-    # TODO: Implement greedy algorithm for interval scheduling
-    # Hint: How do you know if a delivery overlaps with another?
-    # Hint: Can you assign a delivery to an existing driver, or do you need a new one?
-    
-    pass  # Delete this and write your code
+    # Greedy: process by start time, reuse the driver who frees up earliest if possible
+    import heapq
+
+    assignments = []
+    free_at = []  # min-heap of (end_time, driver_index)
+    for d in sorted(deliveries, key=lambda d: (d['start'], d['end'])):
+        if free_at and free_at[0][0] <= d['start']:
+            _, idx = heapq.heappop(free_at)
+        else:
+            idx = len(assignments)
+            assignments.append([])
+        assignments[idx].append(d['delivery_id'])
+        heapq.heappush(free_at, (d['end'], idx))
+    return {'num_drivers': len(assignments), 'assignments': assignments}
 
 
 # ============================================================================
@@ -326,7 +335,7 @@ if __name__ == "__main__":
     
     test_package_prioritization()
     test_truck_loading()
-    # test_driver_assignment()
+    test_driver_assignment()
     # benchmark_scenarios()
     
     print("\n⚠ Uncomment the test functions in the main block to run tests!")
