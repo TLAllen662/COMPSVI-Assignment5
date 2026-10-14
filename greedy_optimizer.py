@@ -336,6 +336,6 @@ if __name__ == "__main__":
     test_package_prioritization()
     test_truck_loading()
     test_driver_assignment()
-    # benchmark_scenarios()
+    benchmark_scenarios()
     
     print("\n⚠ Uncomment the test functions in the main block to run tests!")
