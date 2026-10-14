@@ -33,11 +33,14 @@ def maximize_deliveries(time_windows):
         ]
         maximize_deliveries(time_windows) returns ['A', 'C']
     """
-    # TODO: Implement greedy algorithm for activity selection
-    # Hint: What greedy choice gives you the most room for future deliveries?
-    # Hint: Think about sorting by a specific attribute
-    
-    pass  # Delete this and write your code
+    # Greedy: always take the delivery that finishes earliest
+    selected = []
+    last_end = float('-inf')
+    for window in sorted(time_windows, key=lambda w: (w['end'], w['start'])):
+        if window['start'] >= last_end:
+            selected.append(window['delivery_id'])
+            last_end = window['end']
+    return selected
 
 
 # ============================================================================
@@ -297,7 +300,7 @@ if __name__ == "__main__":
     
     # Uncomment these as you complete each part:
     
-    # test_package_prioritization()
+    test_package_prioritization()
     # test_truck_loading()
     # test_driver_assignment()
     # benchmark_scenarios()
